@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
  * Bootstrap the NestJS application
  * Sets up global validation pipes, CORS configuration, and static file serving
  */
-export async function createApp(): Promise<NestExpressApplication> {
+async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Enable CORS for frontend applications
@@ -37,14 +37,11 @@ export async function createApp(): Promise<NestExpressApplication> {
   return app;
 }
 
-// In a development environment, you might still want to run it directly
-// if (process.env.NODE_ENV !== 'production') {
-//   createApp().then(app => {
-//     const port = process.env.PORT || 3000;
-//     app.listen(port);
-//     console.log(`🚀 Application is running on: http://localhost:${port}/api`);
-//   });
-// }
-// For serverless deployment, the platform will call createApp()
-// and then app.listen() or integrate it with their http adapter.
+// Export the bootstrap function as the default export for Vercel
+export default async function (req, res) {
+  const app = await bootstrap();
+  await app.init();
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp(req, res);
+}
 
