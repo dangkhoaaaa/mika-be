@@ -55,43 +55,44 @@ export class UsersController {
     return plainToClass(UserResponseDto, updatedUser, { excludeExtraneousValues: true });
   }
 
-  /**
-   * Upload user avatar
-   * @param user Current authenticated user
-   * @param file Avatar image file
-   * @returns Updated user with new avatar path
-   */
-  @Put('avatar')
-  @UseInterceptors(
-    FileInterceptor('avatar', {
-      storage: diskStorage({
-        destination: './uploads/avatars',
-        filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          cb(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-      limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB
-      },
-    }),
-  )
-  async uploadAvatar(
-    @CurrentUser() user: any,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif|webp)/ }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ): Promise<UserResponseDto> {
-    const avatarPath = `/uploads/avatars/${file.filename}`;
-    const updatedUser = await this.usersService.updateAvatar(user.userId, avatarPath);
-    return plainToClass(UserResponseDto, updatedUser, { excludeExtraneousValues: true });
-  }
+  // TODO: Re-enable avatar upload functionality when a writable file system is available.
+  // /**
+  //  * Upload user avatar
+  //  * @param user Current authenticated user
+  //  * @param file Avatar image file
+  //  * @returns Updated user with new avatar path
+  //  */
+  // @Put('avatar')
+  // @UseInterceptors(
+  //   FileInterceptor('avatar', {
+  //     storage: diskStorage({
+  //       destination: '/tmp/uploads/avatars',
+  //       filename: (req, file, cb) => {
+  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+  //         const ext = extname(file.originalname);
+  //         cb(null, `${uniqueSuffix}${ext}`);
+  //       },
+  //     }),
+  //     limits: {
+  //       fileSize: 5 * 1024 * 1024, // 5MB
+  //     },
+  //   }),
+  // )
+  // async uploadAvatar(
+  //   @CurrentUser() user: any,
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [
+  //         new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB
+  //         new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif|webp)/ }),
+  //       ],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  // ): Promise<UserResponseDto> {
+  //   const avatarPath = `/uploads/avatars/${file.filename}`;
+  //   const updatedUser = await this.usersService.updateAvatar(user.userId, avatarPath);
+  //   return plainToClass(UserResponseDto, updatedUser, { excludeExtraneousValues: true });
+  // }
 
 }
