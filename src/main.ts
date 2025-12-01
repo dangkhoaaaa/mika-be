@@ -4,11 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
-/**
- * Bootstrap the NestJS application
- * Sets up global validation pipes, CORS configuration, and static file serving
- */
-async function bootstrap(): Promise<NestExpressApplication> {
+async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Enable CORS for frontend applications
@@ -34,14 +30,9 @@ async function bootstrap(): Promise<NestExpressApplication> {
   // Global prefix for all routes
   app.setGlobalPrefix('api');
 
-  return app;
+  const port = process.env.PORT || 3000;
+  await app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
 }
-
-// Export the bootstrap function as the default export for Vercel
-export default async function (req, res) {
-  const app = await bootstrap();
-  await app.init();
-  const expressApp = app.getHttpAdapter().getInstance();
-  expressApp(req, res);
-}
-
+bootstrap();
