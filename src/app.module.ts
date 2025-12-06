@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WatchHistoryModule } from './watch-history/watch-history.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { WatchLaterModule } from './watch-later/watch-later.module';
 import { CommentsModule } from './comments/comments.module';
 import { RatingsModule } from './ratings/ratings.module';
 
@@ -28,6 +29,7 @@ import { RatingsModule } from './ratings/ratings.module';
     UsersModule,
     WatchHistoryModule,
     FavoritesModule,
+    WatchLaterModule,
     CommentsModule,
     RatingsModule,
   ],

@@ -18,4 +18,17 @@ export class AppController {
   getHealth(): { status: string; timestamp: string } {
     return this.appService.getHealth();
   }
+
+  /**
+   * API động để kích hoạt render khi người dùng vào web
+   * Không yêu cầu authentication, chỉ để wake up server
+   */
+  @Get('ping')
+  ping(): { status: string; message: string; timestamp: string } {
+    return {
+      status: 'ok',
+      message: 'Server is awake',
+      timestamp: new Date().toISOString(),
+    };
+  }
 }
